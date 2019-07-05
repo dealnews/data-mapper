@@ -1,0 +1,21 @@
+{
+    "name": "dealnews/data-mapper",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "description": "PHP Library for implementing the Data Mapper pattern",
+    "require": {
+        "php": ">=7.1.0",
+        "phpunit/phpunit": "^7.5",
+        "dealnews/repository": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DealNews\\DataMapper\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DealNews\\DataMapper\\Tests\\": "tests/"
+        }
+    }
+}
