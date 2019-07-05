@@ -4,7 +4,7 @@ This library provides an interface and an abstract base class for creating
 data mapper objects.
 
 It also provides a Repository class based on
-[php-libraries/repository](https://gitlab.dealnews.net/php-libraries/repository)
+[dealnews/repository](https://github.com/dealnews/data-repository)
 which is tailored for use with Data Mapper classes.
 
 ## The Data Mapper Pattern
