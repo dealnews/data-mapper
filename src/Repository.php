@@ -67,7 +67,10 @@ class Repository extends \DealNews\Repository\Repository {
         $class_name = $this->classes[$name];
         $mapper = $this->mappers[trim($class_name, '\\')];
 
-        if (array_key_exists($id, $this->storage[$name])) {
+        if (
+            array_key_exists($name, $this->storage) &&
+            array_key_exists($id, $this->storage[$name])
+        ) {
             unset($this->storage[$name][$id]);
         }
 
