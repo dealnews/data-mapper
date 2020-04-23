@@ -16,7 +16,7 @@ abstract class AbstractMapper implements Mapper {
     /**
      * Name of the class the mapper is mapping
      */
-    public const MAPPED_CLASS = "";
+    public const MAPPED_CLASS = '';
 
     /**
      * Defines the properties that are mapped and any
@@ -28,7 +28,7 @@ abstract class AbstractMapper implements Mapper {
      * Defines the property in the object that represents
      * a unique value for the object.
      */
-    protected const PRIMARY_KEY = "";
+    protected const PRIMARY_KEY = '';
 
     /**
      * Returns the name of the primary key property for
@@ -36,7 +36,7 @@ abstract class AbstractMapper implements Mapper {
      *
      * @return int|string
      */
-    public function get_primary_key() {
+    public function getPrimaryKey() {
         return static::PRIMARY_KEY;
     }
 
@@ -45,7 +45,7 @@ abstract class AbstractMapper implements Mapper {
      *
      * @return string
      */
-    public static function get_mapped_class() {
+    public static function getMappedClass() {
         return static::MAPPED_CLASS;
     }
 
@@ -57,12 +57,13 @@ abstract class AbstractMapper implements Mapper {
      *
      * @suppress PhanTypeExpectedObjectOrClassName
      */
-    protected function set_data(array $data) {
-        $class = $this::MAPPED_CLASS;
+    protected function setData(array $data) {
+        $class  = $this::MAPPED_CLASS;
         $object = new $class();
         foreach ($this::MAPPING as $property => $mapping) {
-            $this->set_value($object, $property, $data, $mapping);
+            $this->setValue($object, $property, $data, $mapping);
         }
+
         return $object;
     }
 
@@ -75,11 +76,12 @@ abstract class AbstractMapper implements Mapper {
      *
      * @return array
      */
-    protected function get_data($object) {
-        $data = array();
+    protected function getData($object) {
+        $data = [];
         foreach ($this::MAPPING as $property => $mapping) {
-            $data[$property] = $this->get_value($object, $property, $mapping);
+            $data[$property] = $this->getValue($object, $property, $mapping);
         }
+
         return $data;
     }
 
@@ -94,7 +96,7 @@ abstract class AbstractMapper implements Mapper {
      *
      * @suppress PhanUnusedProtectedMethodParameter
      */
-    protected function set_value($object, $property, $data, $mapping) {
+    protected function setValue($object, $property, $data, $mapping) {
         if (array_key_exists($property, $data)) {
             $object->$property = $data[$property];
         }
@@ -110,7 +112,7 @@ abstract class AbstractMapper implements Mapper {
      *
      * @suppress PhanUnusedProtectedMethodParameter
      */
-    protected function get_value($object, $property, $mapping) {
+    protected function getValue($object, $property, $mapping) {
         return $object->$property;
     }
 }

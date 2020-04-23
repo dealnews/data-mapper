@@ -34,7 +34,7 @@ class Repository extends \DealNews\Repository\Repository {
     public function __construct(array $mappers = []) {
         if (!empty($mappers)) {
             foreach ($mappers as $name => $mapper) {
-                $this->add_mapper($name, $mapper);
+                $this->addMapper($name, $mapper);
             }
         }
     }
@@ -49,6 +49,7 @@ class Repository extends \DealNews\Repository\Repository {
             throw new \LogicException("There is no class registered for `$name`", 1);
         }
         $class_name = $this->classes[$name];
+
         return new $class_name();
     }
 
@@ -65,12 +66,9 @@ class Repository extends \DealNews\Repository\Repository {
             throw new \LogicException("There is no class registered for `$name`", 2);
         }
         $class_name = $this->classes[$name];
-        $mapper = $this->mappers[trim($class_name, '\\')];
+        $mapper     = $this->mappers[trim($class_name, '\\')];
 
-        if (
-            array_key_exists($name, $this->storage) &&
-            array_key_exists($id, $this->storage[$name])
-        ) {
+        if (array_key_exists($id, $this->storage[$name])) {
             unset($this->storage[$name][$id]);
         }
 
@@ -90,7 +88,8 @@ class Repository extends \DealNews\Repository\Repository {
             throw new \LogicException("There is no class registered for `$name`", 3);
         }
         $class_name = $this->classes[$name];
-        $mapper = $this->mappers[trim($class_name, '\\')];
+        $mapper     = $this->mappers[trim($class_name, '\\')];
+
         return $mapper->find($filters);
     }
 
@@ -100,16 +99,16 @@ class Repository extends \DealNews\Repository\Repository {
      * @param string         $name   Mapped Object name
      * @param AbstractMapper $mapper Mapper object
      */
-    public function add_mapper(string $name, Mapper $mapper) {
-        $class_name = trim($mapper::get_mapped_class(), '\\');
+    public function addMapper(string $name, Mapper $mapper) {
+        $class_name = trim($mapper::getMappedClass(), '\\');
 
         if (!class_exists($class_name)) {
             throw new \LogicException("Class `$class_name` not found for `$name`", 4);
         }
 
         $this->mappers[$class_name] = $mapper;
-        $this->classes[$name] = $class_name;
-        $this->register($name, [$mapper, "load_multi"], [$this, "mapper_save"]);
+        $this->classes[$name]       = $class_name;
+        $this->register($name, [$mapper, 'loadMulti'], [$this, 'mapperSave']);
     }
 
     /**
@@ -118,17 +117,32 @@ class Repository extends \DealNews\Repository\Repository {
      * @param  object $object The object to save
      * @return array|bool
      */
-    protected function mapper_save($object) {
+    protected function mapperSave($object) {
         $return = false;
-        $class = trim(get_class($object), '\\');
+        $class  = trim(get_class($object), '\\');
+
+        // See if a mapper exists that can map a
+        // parent class of the object
+        if (!isset($this->mappers[$class])) {
+            $parents = class_parents($object);
+            foreach ($parents as $parent) {
+                $parent = trim($parent, '\\');
+                if (isset($this->mappers[$parent])) {
+                    $class = $parent;
+                    break;
+                }
+            }
+        }
+
         if (isset($this->mappers[$class])) {
             $object = $this->mappers[$class]->save($object);
             if ($object) {
                 $return = [
-                    $this->mappers[$class]->get_primary_key() => $object
+                    $this->mappers[$class]->getPrimaryKey() => $object,
                 ];
             }
         }
+
         return $return;
     }
 }

@@ -4,25 +4,39 @@ namespace DealNews\DataMapper\Tests;
 
 use \DealNews\DataMapper\Repository;
 use \DealNews\DataMapper\Tests\TestClasses\Course;
+use \DealNews\DataMapper\Tests\TestClasses\CourseChild;
 use \DealNews\DataMapper\Tests\TestClasses\Mapper\CourseMapper;
 
 class RepositoryTest extends \PHPUnit\Framework\TestCase {
-
     public function testSaving() {
         $this->save();
     }
 
-    public function testLoading() {
+    public function testSaveChild() {
+        $repo = new Repository();
+        $repo->addMapper('CourseChild', new CourseMapper);
 
+        $course       = new CourseChild();
+        $course->name = "Child Test";
+
+        $course = $repo->save('CourseChild', $course);
+
+        $this->assertEquals(
+            "Child Test",
+            $course->name
+        );
+    }
+
+    public function testLoading() {
         $id = $this->save();
 
         $repo = new Repository(
             [
-                "Course" => new CourseMapper
+                'Course' => new CourseMapper,
             ]
         );
 
-        $courses = $repo->get("Course", [$id]);
+        $courses = $repo->get('Course', [$id]);
 
         $this->assertNotEmpty(
             $courses
@@ -37,25 +51,25 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
     public function testDelete() {
         $repo = new Repository(
             [
-                "Course" => new CourseMapper
+                'Course' => new CourseMapper,
             ]
         );
 
-        $id = $this->save("TestDelete");
+        $id = $this->save('TestDelete');
 
-        $courses = $repo->get("Course", [$id]);
+        $courses = $repo->get('Course', [$id]);
 
         $this->assertNotEmpty(
             $courses
         );
 
-        $result = $repo->delete("Course", $id);
+        $result = $repo->delete('Course', $id);
 
         $this->assertTrue(
             $result
         );
 
-        $courses = $repo->get("Course", [$id]);
+        $courses = $repo->get('Course', [$id]);
 
         $this->assertEmpty(
             $courses
@@ -65,29 +79,27 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
     public function testNew() {
         $repo = new Repository(
             [
-                "Course" => new CourseMapper
+                'Course' => new CourseMapper,
             ]
         );
 
-        $course = $repo->new("Course");
+        $course = $repo->new('Course');
 
         $this->assertTrue(
             $course instanceof Course
         );
-
     }
 
     public function testFind() {
-
-        $id = $this->save("TestFind");
+        $id = $this->save('TestFind');
 
         $repo = new Repository(
             [
-                "Course" => new CourseMapper
+                'Course' => new CourseMapper,
             ]
         );
 
-        $courses = $repo->find("Course", ["name" => "TestFind"]);
+        $courses = $repo->find('Course', ['name' => 'TestFind']);
 
         $this->assertNotEmpty(
             $courses
@@ -99,50 +111,43 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionCode 1
-     */
     public function testBadNew() {
+        $this->expectException("\LogicException");
+        $this->expectExceptionCode(1);
+
         $repo = new Repository();
-        $obj = $repo->new("Foo");
+        $obj  = $repo->new('Foo');
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionCode 2
-     */
     public function testBadDelete() {
+        $this->expectException("\LogicException");
+        $this->expectExceptionCode(2);
         $repo = new Repository();
-        $obj = $repo->delete("Foo", 1);
+        $obj  = $repo->delete('Foo', 1);
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionCode 3
-     */
     public function testBadFind() {
+        $this->expectException("\LogicException");
+        $this->expectExceptionCode(3);
         $repo = new Repository();
-        $obj = $repo->find("Foo", []);
+        $obj  = $repo->find('Foo', []);
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionCode 4
-     */
     public function testBadClass() {
+        $this->expectException("\LogicException");
+        $this->expectExceptionCode(4);
         $repo = new Repository();
-        $obj = $repo->add_mapper("bad", new BadMapper());
+        $obj  = $repo->addMapper('bad', new BadMapper());
     }
 
-    protected function save($name = "Test") {
+    protected function save($name = 'Test') {
         $repo = new Repository();
-        $repo->add_mapper("Course", new CourseMapper);
+        $repo->addMapper('Course', new CourseMapper);
 
-        $course = new Course();
+        $course       = new Course();
         $course->name = $name;
 
-        $course = $repo->save("Course", $course);
+        $course = $repo->save('Course', $course);
 
         $this->assertEquals(
             $name,
@@ -153,11 +158,19 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
     }
 }
 
-
 class BadMapper extends \DealNews\DataMapper\AbstractMapper {
-    public function load($id){}
-    public function load_multi(array $ids){}
-    public function find(array $filter){}
-    public function save($object){}
-    public function delete($id){}
+    public function load($id) {
+    }
+
+    public function loadMulti(array $ids) {
+    }
+
+    public function find(array $filter) {
+    }
+
+    public function save($object) {
+    }
+
+    public function delete($id) {
+    }
 }

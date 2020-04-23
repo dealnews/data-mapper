@@ -9,24 +9,22 @@ namespace DealNews\DataMapper\Tests\TestClasses\Mapper;
  * @copyright   1997-Present DealNews.com, Inc
  * @package     DataMapper
  */
-
 class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
-
     public const MAPPED_CLASS = "\DealNews\DataMapper\Tests\TestClasses\Course";
 
-    public const PRIMARY_KEY = "course_id";
+    public const PRIMARY_KEY = 'course_id';
 
     public const MAPPING = [
-        "course_id" => [],
-        "name"      => [],
+        'course_id' => [],
+        'name'      => [],
     ];
 
-    public function test_set_data(array $data) {
-        return $this->set_data($data);
+    public function testSetData(array $data) {
+        return $this->setData($data);
     }
 
-    public function test_get_data(\DealNews\DataMapper\Tests\TestClasses\Course $course) {
-        return $this->get_data($course);
+    public function testGetData(\DealNews\DataMapper\Tests\TestClasses\Course $course) {
+        return $this->getData($course);
     }
 
     protected static $data = [];
@@ -36,16 +34,18 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
         if (!empty(self::$data[$id])) {
             $ret = self::$data[$id];
         }
+
         return $ret;
     }
 
-    public function load_multi(array $ids) {
+    public function loadMulti(array $ids) {
         $ret = [];
         foreach ($ids as $id) {
             if (!empty(self::$data[$id])) {
                 $ret[$id] = self::$data[$id];
             }
         }
+
         return $ret;
     }
 
@@ -69,6 +69,7 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
 
     public function save($object) {
         self::$data[$object->course_id] = $object;
+
         return $object;
     }
 
@@ -76,6 +77,7 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
         if (!empty(self::$data[$id])) {
             unset(self::$data[$id]);
         }
+
         return true;
     }
 }

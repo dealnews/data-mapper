@@ -10,7 +10,6 @@ namespace DealNews\DataMapper\Interfaces;
  * @package     DataMapper
  */
 interface Mapper {
-
     /**
      * Loads an object from the storage system
      *
@@ -27,7 +26,7 @@ interface Mapper {
      * @return boolean|array
      * @throws \Error
      */
-    public function load_multi(array $ids);
+    public function loadMulti(array $ids);
 
     /**
      * Finds multiple objects in the storage system
@@ -63,5 +62,5 @@ interface Mapper {
      *
      * @return string
      */
-    public static function get_mapped_class();
+    public static function getMappedClass();
 }

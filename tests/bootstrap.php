@@ -10,17 +10,16 @@ function _debug() {
     $bt = debug_backtrace();
     fwrite(STDERR, "\nSTART DEBUG\n");
     foreach ($bt as $pos => $t) {
-        if (!isset($t["file"])) {
+        if (!isset($t['file'])) {
             break;
         }
-        fwrite(STDERR, "#$pos {$t["file"]} on line {$t["line"]}\n");
+        fwrite(STDERR, "#$pos {$t['file']} on line {$t['line']}\n");
     }
     fwrite(STDERR, "###########\n");
     $args = func_get_args();
     foreach ($args as $arg) {
-        fwrite(STDERR, trim(var_export($arg, true))."\n");
+        fwrite(STDERR, trim(var_export($arg, true)) . "\n");
     }
     fwrite(STDERR, "###########\n");
     fwrite(STDERR, "END DEBUG\n\n");
 }
-

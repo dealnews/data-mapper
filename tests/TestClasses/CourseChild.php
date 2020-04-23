@@ -3,13 +3,13 @@
 namespace DealNews\DataMapper\Tests\TestClasses;
 
 /**
- * Test Course Class
+ * Test Child of Course Class
  *
  * @author      Brian Moon <brianm@dealnews.com>
  * @copyright   1997-Present DealNews.com, Inc
  * @package     DataMapper
  */
-class Course {
+class CourseChild extends Course {
 
     /**
      * The unique id
