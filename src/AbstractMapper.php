@@ -34,9 +34,9 @@ abstract class AbstractMapper implements Mapper {
      * Returns the name of the primary key property for
      * the object being mapped
      *
-     * @return int|string
+     * @return string
      */
-    public function getPrimaryKey() {
+    public function getPrimaryKey(): string {
         return static::PRIMARY_KEY;
     }
 
@@ -45,7 +45,7 @@ abstract class AbstractMapper implements Mapper {
      *
      * @return string
      */
-    public static function getMappedClass() {
+    public static function getMappedClass(): string {
         return static::MAPPED_CLASS;
     }
 
@@ -57,7 +57,7 @@ abstract class AbstractMapper implements Mapper {
      *
      * @suppress PhanTypeExpectedObjectOrClassName
      */
-    protected function setData(array $data) {
+    protected function setData(array $data): object {
         $class  = $this::MAPPED_CLASS;
         $object = new $class();
         foreach ($this::MAPPING as $property => $mapping) {
@@ -76,7 +76,7 @@ abstract class AbstractMapper implements Mapper {
      *
      * @return array
      */
-    protected function getData($object) {
+    protected function getData($object): array {
         $data = [];
         foreach ($this::MAPPING as $property => $mapping) {
             $data[$property] = $this->getValue($object, $property, $mapping);

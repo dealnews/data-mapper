@@ -19,13 +19,13 @@ class Repository extends \DealNews\Repository\Repository {
      * Keeps the list of mappers
      * @var array
      */
-    protected $mappers = [];
+    protected array $mappers = [];
 
     /**
      * Keeps the list of classes
      * @var array
      */
-    protected $classes = [];
+    protected array $classes = [];
 
     /**
      * Creates the repository
@@ -44,7 +44,7 @@ class Repository extends \DealNews\Repository\Repository {
      *
      * @param string         $name   Mapped Object name
      */
-    public function new(string $name) {
+    public function new(string $name): object {
         if (!isset($this->classes[$name])) {
             throw new \LogicException("There is no class registered for `$name`", 1);
         }
@@ -61,7 +61,7 @@ class Repository extends \DealNews\Repository\Repository {
      *
      * @return boolean
      */
-    public function delete(string $name, $id) {
+    public function delete(string $name, $id): bool {
         if (!isset($this->classes[$name])) {
             throw new \LogicException("There is no class registered for `$name`", 2);
         }
