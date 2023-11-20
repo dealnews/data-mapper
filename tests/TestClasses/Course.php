@@ -24,4 +24,6 @@ class Course {
      * @var string
      */
     public $name = '';
+
+    public $create_date = '';
 }

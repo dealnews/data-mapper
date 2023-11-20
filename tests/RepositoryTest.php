@@ -17,12 +17,12 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
         $repo->addMapper('CourseChild', new CourseMapper);
 
         $course       = new CourseChild();
-        $course->name = "Child Test";
+        $course->name = 'Child Test';
 
         $course = $repo->save('CourseChild', $course);
 
         $this->assertEquals(
-            "Child Test",
+            'Child Test',
             $course->name
         );
     }
@@ -111,31 +111,42 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    public function testBadNew() {
-        $this->expectException("\LogicException");
-        $this->expectExceptionCode(1);
+    public function testGetMapper() {
+        $repo = new Repository(
+            [
+                'Course' => new CourseMapper,
+            ]
+        );
 
+        $mapper = $repo->getMapper('Course');
+
+        $this->assertTrue($mapper instanceof CourseMapper);
+    }
+
+    public function testBadNew() {
+        $this->expectException('\LogicException');
+        $this->expectExceptionCode('1');
         $repo = new Repository();
         $obj  = $repo->new('Foo');
     }
 
     public function testBadDelete() {
-        $this->expectException("\LogicException");
-        $this->expectExceptionCode(2);
+        $this->expectException('\LogicException');
+        $this->expectExceptionCode('1');
         $repo = new Repository();
         $obj  = $repo->delete('Foo', 1);
     }
 
     public function testBadFind() {
-        $this->expectException("\LogicException");
-        $this->expectExceptionCode(3);
+        $this->expectException('\LogicException');
+        $this->expectExceptionCode('1');
         $repo = new Repository();
         $obj  = $repo->find('Foo', []);
     }
 
     public function testBadClass() {
-        $this->expectException("\LogicException");
-        $this->expectExceptionCode(4);
+        $this->expectException('\LogicException');
+        $this->expectExceptionCode('4');
         $repo = new Repository();
         $obj  = $repo->addMapper('bad', new BadMapper());
     }
@@ -159,18 +170,18 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
 }
 
 class BadMapper extends \DealNews\DataMapper\AbstractMapper {
-    public function load($id) {
+    public function load($id): ?object {
     }
 
-    public function loadMulti(array $ids) {
+    public function loadMulti(array $ids): ?array {
     }
 
-    public function find(array $filter) {
+    public function find(array $filter): ?array {
     }
 
-    public function save($object) {
+    public function save(object $object): object {
     }
 
-    public function delete($id) {
+    public function delete($id): bool {
     }
 }

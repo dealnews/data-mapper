@@ -12,17 +12,21 @@ use \DealNews\DataMapper\Interfaces\Mapper;
  * @author      Brian Moon <brianm@dealnews.com>
  * @copyright   1997-Present DealNews.com, Inc
  * @package     DataMapper
+ *
+ * @phan-suppress PhanUnreferencedClass
  */
 class Repository extends \DealNews\Repository\Repository {
 
     /**
      * Keeps the list of mappers
+     *
      * @var array
      */
     protected array $mappers = [];
 
     /**
      * Keeps the list of classes
+     *
      * @var array
      */
     protected array $classes = [];
@@ -43,12 +47,11 @@ class Repository extends \DealNews\Repository\Repository {
      * Returns a new object of type $name
      *
      * @param string         $name   Mapped Object name
+     *
+     * @return object
      */
     public function new(string $name): object {
-        if (!isset($this->classes[$name])) {
-            throw new \LogicException("There is no class registered for `$name`", 1);
-        }
-        $class_name = $this->classes[$name];
+        $class_name = $this->findClass($name);
 
         return new $class_name();
     }
@@ -62,13 +65,10 @@ class Repository extends \DealNews\Repository\Repository {
      * @return boolean
      */
     public function delete(string $name, $id): bool {
-        if (!isset($this->classes[$name])) {
-            throw new \LogicException("There is no class registered for `$name`", 2);
-        }
-        $class_name = $this->classes[$name];
+        $class_name = $this->findClass($name);
         $mapper     = $this->mappers[trim($class_name, '\\')];
 
-        if (array_key_exists($id, $this->storage[$name])) {
+        if (isset($this->storage[$name]) && array_key_exists($id, $this->storage[$name])) {
             unset($this->storage[$name][$id]);
         }
 
@@ -83,12 +83,8 @@ class Repository extends \DealNews\Repository\Repository {
      *
      * @return boolean|array
      */
-    public function find(string $name, array $filters) {
-        if (!isset($this->classes[$name])) {
-            throw new \LogicException("There is no class registered for `$name`", 3);
-        }
-        $class_name = $this->classes[$name];
-        $mapper     = $this->mappers[trim($class_name, '\\')];
+    public function find(string $name, array $filters): bool|array {
+        $mapper     = $this->getMapper($name);
 
         return $mapper->find($filters);
     }
@@ -99,7 +95,7 @@ class Repository extends \DealNews\Repository\Repository {
      * @param string         $name   Mapped Object name
      * @param AbstractMapper $mapper Mapper object
      */
-    public function addMapper(string $name, Mapper $mapper) {
+    public function addMapper(string $name, Mapper $mapper): void {
         $class_name = trim($mapper::getMappedClass(), '\\');
 
         if (!class_exists($class_name)) {
@@ -112,12 +108,25 @@ class Repository extends \DealNews\Repository\Repository {
     }
 
     /**
+     * Gets the mapper for a mapped object name
+     *
+     * @param string   $name   Mapped Object name
+     *
+     * @return Mapper
+     */
+    public function getMapper(string $name): Mapper {
+        $class_name = $this->findClass($name);
+
+        return $this->mappers[trim($class_name, '\\')];
+    }
+
+    /**
      * Internal function to handle mapper saves
      *
      * @param  object $object The object to save
      * @return array|bool
      */
-    protected function mapperSave($object) {
+    protected function mapperSave($object): bool|array {
         $return = false;
         $class  = trim(get_class($object), '\\');
 
@@ -144,5 +153,21 @@ class Repository extends \DealNews\Repository\Repository {
         }
 
         return $return;
+    }
+
+    /**
+     * Finds the class name for the registered name
+     *
+     * @param string   $name   Mapped Object name
+     *
+     * @return string
+     */
+    protected function findClass(string $name): string {
+        if (!isset($this->classes[$name])) {
+            throw new \LogicException("There is no class registered for `$name`", 1);
+        }
+        $class_name = $this->classes[$name];
+
+        return $class_name;
     }
 }

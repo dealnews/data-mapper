@@ -15,8 +15,16 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
     public const PRIMARY_KEY = 'course_id';
 
     public const MAPPING = [
-        'course_id' => [],
-        'name'      => [],
+        'course_id'   => [],
+        'name'        => [
+            'constraint' => [
+                'min' => 1,
+                'max' => 100,
+            ],
+        ],
+        'create_date' => [
+            'read_only' => true,
+        ],
     ];
 
     public function testSetData(array $data) {
@@ -29,7 +37,7 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
 
     protected static $data = [];
 
-    public function load($id) {
+    public function load($id): ?object {
         $ret = false;
         if (!empty(self::$data[$id])) {
             $ret = self::$data[$id];
@@ -38,7 +46,7 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
         return $ret;
     }
 
-    public function loadMulti(array $ids) {
+    public function loadMulti(array $ids): ?array {
         $ret = [];
         foreach ($ids as $id) {
             if (!empty(self::$data[$id])) {
@@ -49,7 +57,7 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
         return $ret;
     }
 
-    public function find(array $filter) {
+    public function find(array $filter): ?array {
         $ret = [];
         foreach (self::$data as $id => $obj) {
             $match = true;
@@ -67,13 +75,13 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
         return $ret;
     }
 
-    public function save($object) {
+    public function save(object $object): object {
         self::$data[$object->course_id] = $object;
 
         return $object;
     }
 
-    public function delete($id) {
+    public function delete($id): bool {
         if (!empty(self::$data[$id])) {
             unset(self::$data[$id]);
         }

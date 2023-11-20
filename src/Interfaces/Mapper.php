@@ -14,19 +14,19 @@ interface Mapper {
      * Loads an object from the storage system
      *
      * @param  int|string    $id Primay key id of the object to load
-     * @return boolean|object
+     * @return null|object
      * @throws \Error
      */
-    public function load($id);
+    public function load($id): ?object;
 
     /**
      * Loads multiple objects from the storage system
      *
      * @param  array    $ids Array of primay key ids of the objects to load
-     * @return boolean|array
+     * @return null|array
      * @throws \Error
      */
-    public function loadMulti(array $ids);
+    public function loadMulti(array $ids): ?array;
 
     /**
      * Finds multiple objects in the storage system
@@ -34,19 +34,19 @@ interface Mapper {
      * @param  array    $filter Array of filters where the keys are column
      *                          names and the values are column values to
      *                          filter upon.
-     * @return boolean|array
+     * @return null|array
      * @throws \Error
      */
-    public function find(array $filter);
+    public function find(array $filter): ?array;
 
     /**
      * Saves the object to the storage system
      *
      * @param  object $object
-     * @return boolean
+     * @return object
      * @throws \Error
      */
-    public function save($object);
+    public function save(object $object): object;
 
     /**
      * Deletes an object from the storage system
@@ -55,12 +55,12 @@ interface Mapper {
      * @return boolean
      * @throws \Error
      */
-    public function delete($id);
+    public function delete($id): bool;
 
     /**
      * Returns the name of the class the mapper saves/loads
      *
      * @return string
      */
-    public static function getMappedClass();
+    public static function getMappedClass(): string;
 }
