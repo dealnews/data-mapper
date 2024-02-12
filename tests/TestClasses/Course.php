@@ -16,14 +16,25 @@ class Course {
      *
      * @var integer
      */
-    public $course_id = 0;
+    public int $course_id = 0;
 
     /**
      * A short name
      *
      * @var string
      */
-    public $name = '';
+    public string $name = '';
 
-    public $create_datetime = '';
+    public string $create_datetime = '';
+
+    public bool $active = false;
+
+    public \ArrayObject $students;
+
+    public Teacher $teacher;
+
+    public function __construct() {
+        $this->students = new \ArrayObject();
+        $this->teacher  = new Teacher();
+    }
 }

@@ -22,6 +22,18 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
                 'max' => 100,
             ],
         ],
+        'active' => [],
+        'teacher'    => [
+            'class'       => \DealNews\DataMapper\Tests\TestClasses\Teacher::class,
+            'one_to_many' => false,
+        ],
+        'students'    => [
+            'class'       => \DealNews\DataMapper\Tests\TestClasses\Student::class,
+            'one_to_many' => true,
+            'constraint'  => [
+                'type' => 'array',
+            ],
+        ],
         'create_datetime' => [
             'rename'    => 'create_date',
             'read_only' => true,

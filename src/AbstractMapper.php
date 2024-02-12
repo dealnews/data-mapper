@@ -150,6 +150,17 @@ abstract class AbstractMapper implements Mapper {
                     $timezone = $mapping['timezone'] ?? null;
                     $format   = $mapping['format'] ?? 'Y-m-d H:i:s';
                     $value    = $mapping['class']::createFromFormat($format, $value, $timezone);
+                } else {
+
+                    if (!empty($mapping['one_to_many'])) {
+                        $new_value = [];
+                        foreach ($value as $v) {
+                            $new_value[] = $this->createObject($mapping['class'], $v);
+                        }
+                        $value = $new_value;
+                    } else {
+                        $value = $this->createObject($mapping['class'], $value);
+                    }
                 }
             }
 
@@ -163,6 +174,15 @@ abstract class AbstractMapper implements Mapper {
                 if ($value === null) {
                     $value = false;
                 }
+            }
+
+            if (
+                is_array($value) &&
+                is_object($object->$property) &&
+                $object->$property instanceof \ArrayObject
+            ) {
+                $object->$property->exchangeArray($value);
+                $value = $object->$property;
             }
 
             $object->$property = $value;
@@ -207,6 +227,17 @@ abstract class AbstractMapper implements Mapper {
             ) {
                 $format = $mapping['format'] ?? 'Y-m-d H:i:s';
                 $value  = $object->$property->format($format);
+            } else {
+
+                if (!empty($mapping['one_to_many'])) {
+                    $new_value = [];
+                    foreach ($value as $v) {
+                        $new_value[] = (array)$v;
+                    }
+                    $value = $new_value;
+                } else {
+                    $value = (array)$value;
+                }
             }
         }
 
@@ -243,5 +274,16 @@ abstract class AbstractMapper implements Mapper {
         }
 
         return $value;
+    }
+
+    protected function createObject(string $class, array $data): object {
+        $obj = new $class();
+        foreach ($data as $prop => $value) {
+            if (property_exists($obj, $prop)) {
+                $obj->$prop = $value;
+            }
+        }
+
+        return $obj;
     }
 }
