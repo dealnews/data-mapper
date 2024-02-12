@@ -42,6 +42,55 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
 
     public function encodingSetData() {
         return [
+
+            'Bool True String Yes uses Filter' => [
+                'bool',
+                [
+                    'bool' => 'Yes',
+                ],
+                [
+                ],
+                true,
+            ],
+
+            'Bool False String No uses Filter' => [
+                'bool',
+                [
+                    'bool' => 'No',
+                ],
+                [
+                ],
+                false,
+            ],
+
+            'Bool True String AYE uses bool values' => [
+                'bool',
+                [
+                    'bool' => 'AYE',
+                ],
+                [
+                    'bool_values' => [
+                        'true'  => 'AYE',
+                        'false' => 'NAY',
+                    ],
+                ],
+                true,
+            ],
+
+            'Bool False String NAY uses bool values' => [
+                'bool',
+                [
+                    'bool' => 'NAY',
+                ],
+                [
+                    'bool_values' => [
+                        'true'  => 'AYE',
+                        'false' => 'NAY',
+                    ],
+                ],
+                false,
+            ],
+
             'JSON Array' => [
                 'json_array',
                 [
@@ -128,6 +177,31 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
 
     public function encodingGetData() {
         return [
+
+            'Bool True String Yes' => [
+                'bool',
+                true,
+                [
+                    'bool_values' => [
+                        'true'  => 'Yes',
+                        'false' => 'No',
+                    ],
+                ],
+                'Yes',
+            ],
+
+            'Bool False String No' => [
+                'bool',
+                false,
+                [
+                    'bool_values' => [
+                        'true'  => 'Yes',
+                        'false' => 'No',
+                    ],
+                ],
+                'No',
+            ],
+
             'JSON Array' => [
                 'json_array',
                 [
@@ -188,16 +262,23 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
 }
 
 class SetGetValueMock {
-    public $int;
-    public $string;
-    public $bool;
-    public $float;
-    public array $json_array;
+    public int $int          = 0;
+    public string $string    = '';
+    public bool $bool        = false;
+    public float $float      = 0.0;
+    public array $json_array = [];
     public \stdClass $json_object;
-    public array $yaml;
+    public array $yaml = [];
     public \stdClass $class;
     public \DateTime $dt;
     public \DateTimeImmutable $dti;
+
+    public function __construct() {
+        $this->json_object = new \stdClass();
+        $this->class       = new \stdClass();
+        $this->dt          = new \DateTime();
+        $this->dti         = new \DateTimeImmutable();
+    }
 }
 
 class SetGetValueMapperMock extends AbstractMapper {

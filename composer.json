@@ -11,7 +11,7 @@
     "require": {
         "php": "^8.0",
         "dealnews/constraints": "^2.2.0",
-        "dealnews/repository": "^3.1"
+        "dealnews/repository": "^4.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.38",

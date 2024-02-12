@@ -66,11 +66,11 @@ abstract class AbstractMapper implements Mapper {
      *
      * @param array $data Array of data loaded from the database
      *
-     * @suppress PhanTypeExpectedObjectOrClassName
+     * @suppress PhanTypeExpectedObjectOrClassName, PhanEmptyFQSENInClasslike
      */
     protected function setData(array $data): object {
         $class  = $this::MAPPED_CLASS;
-        $object = new $class(); // @phan-suppress-current-line PhanEmptyFQSENInClasslike
+        $object = new $class();
         foreach ($this::MAPPING as $property => $mapping) {
             $this->setValue($object, $property, $data, $mapping);
         }
@@ -113,6 +113,10 @@ abstract class AbstractMapper implements Mapper {
      * @suppress PhanUnusedProtectedMethodParameter
      */
     protected function setValue(object $object, string $property, array $data, array $mapping) {
+        if (!empty($mapping['rename']) && array_key_exists($mapping['rename'], $data)) {
+            $data[$property] = $data[$mapping['rename']];
+        }
+
         if (array_key_exists($property, $data)) {
             $value = $data[$property];
 
@@ -146,7 +150,39 @@ abstract class AbstractMapper implements Mapper {
                     $timezone = $mapping['timezone'] ?? null;
                     $format   = $mapping['format'] ?? 'Y-m-d H:i:s';
                     $value    = $mapping['class']::createFromFormat($format, $value, $timezone);
+                } else {
+
+                    if (!empty($mapping['one_to_many'])) {
+                        $new_value = [];
+                        foreach ($value as $v) {
+                            $new_value[] = $this->createObject($mapping['class'], $v);
+                        }
+                        $value = $new_value;
+                    } else {
+                        $value = $this->createObject($mapping['class'], $value);
+                    }
                 }
+            }
+
+            if (gettype($object->$property) === 'boolean') {
+                if (isset($mapping['bool_values'])) {
+                    $vals  = array_flip($mapping['bool_values']);
+                    $value = $vals[$value] === 'true';
+                } elseif (gettype($value) !== 'boolean') {
+                    $value = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                }
+                if ($value === null) {
+                    $value = false;
+                }
+            }
+
+            if (
+                is_array($value) &&
+                is_object($object->$property) &&
+                $object->$property instanceof \ArrayObject
+            ) {
+                $object->$property->exchangeArray($value);
+                $value = $object->$property;
             }
 
             $object->$property = $value;
@@ -191,6 +227,17 @@ abstract class AbstractMapper implements Mapper {
             ) {
                 $format = $mapping['format'] ?? 'Y-m-d H:i:s';
                 $value  = $object->$property->format($format);
+            } else {
+
+                if (!empty($mapping['one_to_many'])) {
+                    $new_value = [];
+                    foreach ($value as $v) {
+                        $new_value[] = (array)$v;
+                    }
+                    $value = $new_value;
+                } else {
+                    $value = (array)$value;
+                }
             }
         }
 
@@ -218,6 +265,25 @@ abstract class AbstractMapper implements Mapper {
             }
         }
 
+        if (isset($mapping['bool_values'])) {
+            if ($value === true) {
+                $value = $mapping['bool_values']['true'];
+            } else {
+                $value = $mapping['bool_values']['false'];
+            }
+        }
+
         return $value;
+    }
+
+    protected function createObject(string $class, array $data): object {
+        $obj = new $class();
+        foreach ($data as $prop => $value) {
+            if (property_exists($obj, $prop)) {
+                $obj->$prop = $value;
+            }
+        }
+
+        return $obj;
     }
 }
