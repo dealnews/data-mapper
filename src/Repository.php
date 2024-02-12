@@ -47,8 +47,6 @@ class Repository extends \DealNews\Repository\Repository {
      * Returns a new object of type $name
      *
      * @param string         $name   Mapped Object name
-     *
-     * @return object
      */
     public function new(string $name): object {
         $class_name = $this->findClass($name);
@@ -76,7 +74,10 @@ class Repository extends \DealNews\Repository\Repository {
     }
 
     /**
-     * Returns objects matching the filters
+     * Returns objects matching the filters. This method does not check
+     * the Repository storage for data. The data is returned from the Mapper.
+     * The data is stored in the Repository storage however after it is
+     * retrieved.
      *
      * @param  string $name    Mapped Object name
      * @param  array  $filters Array of filters. See \DealNews\DataMapper\AbstractMapper::find()
@@ -84,9 +85,13 @@ class Repository extends \DealNews\Repository\Repository {
      * @return boolean|array
      */
     public function find(string $name, array $filters): bool|array {
-        $mapper     = $this->getMapper($name);
+        $mapper = $this->getMapper($name);
+        $data   = $mapper->find($filters);
+        if (!empty($data)) {
+            $this->setMulti($name, $data);
+        }
 
-        return $mapper->find($filters);
+        return $data;
     }
 
     /**
@@ -146,8 +151,9 @@ class Repository extends \DealNews\Repository\Repository {
         if (isset($this->mappers[$class])) {
             $object = $this->mappers[$class]->save($object);
             if ($object) {
+                $key    = $this->mappers[$class]->getPrimaryKey();
                 $return = [
-                    $this->mappers[$class]->getPrimaryKey() => $object,
+                    $object->$key => $object,
                 ];
             }
         }

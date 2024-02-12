@@ -22,7 +22,8 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
                 'max' => 100,
             ],
         ],
-        'create_date' => [
+        'create_datetime' => [
+            'rename'    => 'create_date',
             'read_only' => true,
         ],
     ];

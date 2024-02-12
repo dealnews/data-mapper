@@ -25,5 +25,5 @@ class Course {
      */
     public $name = '';
 
-    public $create_date = '';
+    public $create_datetime = '';
 }

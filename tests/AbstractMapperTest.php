@@ -16,7 +16,7 @@ class AbstractMapperTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertEquals(1, $course->course_id);
         $this->assertEquals('Test Course', $course->name);
-        $this->assertEquals('2020-01-01', $course->create_date);
+        $this->assertEquals('2020-01-01', $course->create_datetime);
     }
 
     public function testGetData() {

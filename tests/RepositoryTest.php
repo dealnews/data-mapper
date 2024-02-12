@@ -13,7 +13,7 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function testSaveChild() {
-        $repo = new Repository();
+        $repo = $this->getRepo();
         $repo->addMapper('CourseChild', new CourseMapper);
 
         $course       = new CourseChild();
@@ -36,7 +36,7 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
             ]
         );
 
-        $courses = $repo->get('Course', [$id]);
+        $courses = $repo->getMulti('Course', [$id]);
 
         $this->assertNotEmpty(
             $courses
@@ -57,7 +57,7 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
 
         $id = $this->save('TestDelete');
 
-        $courses = $repo->get('Course', [$id]);
+        $courses = $repo->getMulti('Course', [$id]);
 
         $this->assertNotEmpty(
             $courses
@@ -69,7 +69,7 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
             $result
         );
 
-        $courses = $repo->get('Course', [$id]);
+        $courses = $repo->getMulti('Course', [$id]);
 
         $this->assertEmpty(
             $courses
@@ -126,33 +126,33 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
     public function testBadNew() {
         $this->expectException('\LogicException');
         $this->expectExceptionCode('1');
-        $repo = new Repository();
+        $repo = $this->getRepo();
         $obj  = $repo->new('Foo');
     }
 
     public function testBadDelete() {
         $this->expectException('\LogicException');
         $this->expectExceptionCode('1');
-        $repo = new Repository();
+        $repo = $this->getRepo();
         $obj  = $repo->delete('Foo', 1);
     }
 
     public function testBadFind() {
         $this->expectException('\LogicException');
         $this->expectExceptionCode('1');
-        $repo = new Repository();
+        $repo = $this->getRepo();
         $obj  = $repo->find('Foo', []);
     }
 
     public function testBadClass() {
         $this->expectException('\LogicException');
         $this->expectExceptionCode('4');
-        $repo = new Repository();
+        $repo = $this->getRepo();
         $obj  = $repo->addMapper('bad', new BadMapper());
     }
 
     protected function save($name = 'Test') {
-        $repo = new Repository();
+        $repo = $this->getRepo();
         $repo->addMapper('Course', new CourseMapper);
 
         $course       = new Course();
@@ -165,7 +165,15 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
             $course->name
         );
 
+        $this->assertIsInt(key($repo->storage['Course']));
+
         return $course->course_id;
+    }
+
+    protected function getRepo() {
+        return new class extends Repository {
+            public array $storage = [];
+        };
     }
 }
 
