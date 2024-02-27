@@ -2,9 +2,9 @@
 
 namespace DealNews\DataMapper;
 
-use \DealNews\DataMapper\Interfaces\Mapper;
 use \DealNews\Constraints\Constraint;
 use \DealNews\Constraints\ConstraintException as UpstreamConstraintException;
+use \DealNews\DataMapper\Interfaces\Mapper;
 
 /**
  * Abstract Mapper class providing basic reusable functions
@@ -123,8 +123,8 @@ abstract class AbstractMapper implements Mapper {
             if (!empty($mapping['encoding'])) {
                 switch ($mapping['encoding']) {
                     case 'json':
-                        $assoc   = $mapping['json_assoc'] ?? null;
-                        $depth   = $mapping['json_depth'] ?? 512;
+                        $assoc   = $mapping['json_assoc']   ?? null;
+                        $depth   = $mapping['json_depth']   ?? 512;
                         $options = $mapping['json_options'] ?? 0;
                         $value   = json_decode($value, $assoc, $depth, $options);
                         break;
@@ -142,10 +142,10 @@ abstract class AbstractMapper implements Mapper {
 
             if (!empty($mapping['class'])) {
                 if (
-                    is_a($mapping['class'], "\DateTime", true) ||
-                    is_a($mapping['class'], "\DateTimeImmutable", true) ||
-                    is_subclass_of($mapping['class'], "\DateTime", true) ||
-                    is_subclass_of($mapping['class'], "\DateTimeImmutable", true)
+                    is_a($mapping['class'], '\\DateTime', true)           ||
+                    is_a($mapping['class'], '\\DateTimeImmutable', true)  ||
+                    is_subclass_of($mapping['class'], '\\DateTime', true) ||
+                    is_subclass_of($mapping['class'], '\\DateTimeImmutable', true)
                 ) {
 
                     // Date values that are integers or floats in the database
@@ -156,7 +156,7 @@ abstract class AbstractMapper implements Mapper {
                     }
 
                     $timezone = $mapping['timezone'] ?? null;
-                    $format   = $mapping['format'] ?? 'Y-m-d H:i:s';
+                    $format   = $mapping['format']   ?? 'Y-m-d H:i:s';
                     $value    = $mapping['class']::createFromFormat($format, $value, $timezone);
                 } else {
 
@@ -185,7 +185,7 @@ abstract class AbstractMapper implements Mapper {
             }
 
             if (
-                is_array($value) &&
+                is_array($value)              &&
                 is_object($object->$property) &&
                 $object->$property instanceof \ArrayObject
             ) {
@@ -210,6 +210,10 @@ abstract class AbstractMapper implements Mapper {
     protected function getValue(object $object, string $property, array $mapping) {
         $value = $object->$property;
 
+        if ($value instanceof \ArrayObject) {
+            $value = $value->getArrayCopy();
+        }
+
         if (!empty($mapping['encoding'])) {
             switch ($mapping['encoding']) {
                 case 'json':
@@ -228,13 +232,22 @@ abstract class AbstractMapper implements Mapper {
 
         if (!empty($mapping['class'])) {
             if (
-                is_a($mapping['class'], "\DateTime", true) ||
-                is_a($mapping['class'], "\DateTimeImmutable", true) ||
-                is_subclass_of($mapping['class'], "\DateTime", true) ||
-                is_subclass_of($mapping['class'], "\DateTimeImmutable", true)
+                is_a($mapping['class'], '\\DateTime', true)           ||
+                is_a($mapping['class'], '\\DateTimeImmutable', true)  ||
+                is_subclass_of($mapping['class'], '\\DateTime', true) ||
+                is_subclass_of($mapping['class'], '\\DateTimeImmutable', true)
             ) {
-                $format = $mapping['format'] ?? 'Y-m-d H:i:s';
-                $value  = $object->$property->format($format);
+
+                // Date values that are integers or floats in the database
+                // need to be converted to strings for the parent mapper
+                // base class
+                if (isset($mapping['type']) && $mapping['type'] == 'int') {
+                    $value = $object->$property->getTimestamp();
+                } else {
+                    $format = $mapping['format'] ?? 'Y-m-d H:i:s';
+                    $value  = $object->$property->format($format);
+                }
+
             } else {
 
                 if (!empty($mapping['one_to_many']) && is_iterable($value)) {

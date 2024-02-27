@@ -10,7 +10,7 @@ namespace DealNews\DataMapper\Tests\TestClasses\Mapper;
  * @package     DataMapper
  */
 class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
-    public const MAPPED_CLASS = "\DealNews\DataMapper\Tests\TestClasses\Course";
+    public const MAPPED_CLASS = '\\DealNews\\DataMapper\\Tests\\TestClasses\\Course';
 
     public const PRIMARY_KEY = 'course_id';
 
@@ -22,7 +22,7 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
                 'max' => 100,
             ],
         ],
-        'active' => [],
+        'active'     => [],
         'teacher'    => [
             'class'       => \DealNews\DataMapper\Tests\TestClasses\Teacher::class,
             'one_to_many' => false,
