@@ -124,28 +124,28 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function testBadNew() {
-        $this->expectException('\LogicException');
+        $this->expectException('\\LogicException');
         $this->expectExceptionCode('1');
         $repo = $this->getRepo();
         $obj  = $repo->new('Foo');
     }
 
     public function testBadDelete() {
-        $this->expectException('\LogicException');
+        $this->expectException('\\LogicException');
         $this->expectExceptionCode('1');
         $repo = $this->getRepo();
         $obj  = $repo->delete('Foo', 1);
     }
 
     public function testBadFind() {
-        $this->expectException('\LogicException');
+        $this->expectException('\\LogicException');
         $this->expectExceptionCode('1');
         $repo = $this->getRepo();
         $obj  = $repo->find('Foo', []);
     }
 
     public function testBadClass() {
-        $this->expectException('\LogicException');
+        $this->expectException('\\LogicException');
         $this->expectExceptionCode('4');
         $repo = $this->getRepo();
         $obj  = $repo->addMapper('bad', new BadMapper());

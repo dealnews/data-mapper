@@ -3,9 +3,9 @@
 namespace DealNews\DataMapper\Tests;
 
 use \DealNews\DataMapper\Tests\TestClasses\Course;
+use \DealNews\DataMapper\Tests\TestClasses\Mapper\CourseMapper;
 use \DealNews\DataMapper\Tests\TestClasses\Student;
 use \DealNews\DataMapper\Tests\TestClasses\Teacher;
-use \DealNews\DataMapper\Tests\TestClasses\Mapper\CourseMapper;
 
 class AbstractMapperTest extends \PHPUnit\Framework\TestCase {
 
@@ -26,7 +26,7 @@ class AbstractMapperTest extends \PHPUnit\Framework\TestCase {
                     'student_id'      => 2,
                     'name'            => 'Student 2',
                     'create_datetime' => '2020-01-02',
-                ]
+                ],
             ],
             'create_date' => '2020-01-01',
         ]);
@@ -43,14 +43,14 @@ class AbstractMapperTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function testGetData() {
-        $student = new Student();
-        $student->student_id = 2;
-        $student->name = 'Student 2';
+        $student                  = new Student();
+        $student->student_id      = 2;
+        $student->name            = 'Student 2';
         $student->create_datetime = '2020-01-02';
 
-        $teacher = new Teacher();
-        $teacher->teacher_id = 1;
-        $teacher->name = 'Teacher 1';
+        $teacher                  = new Teacher();
+        $teacher->teacher_id      = 1;
+        $teacher->name            = 'Teacher 1';
         $teacher->create_datetime = '2020-01-03';
 
         $course                  = new Course();
@@ -72,7 +72,7 @@ class AbstractMapperTest extends \PHPUnit\Framework\TestCase {
                         'student_id'      => 2,
                         'name'            => 'Student 2',
                         'create_datetime' => '2020-01-02',
-                    ]
+                    ],
                 ],
                 'teacher'   => [
                     'teacher_id'      => 1,
@@ -106,7 +106,7 @@ class AbstractMapperTest extends \PHPUnit\Framework\TestCase {
                 [
                     'name' => '',
                 ],
-                '/Expected: minimum length of 1\.$/',
+                '/Expected: minimum length of 1\\.$/',
                 'name',
             ],
 
@@ -114,7 +114,7 @@ class AbstractMapperTest extends \PHPUnit\Framework\TestCase {
                 [
                     'name' => str_repeat('x', 101),
                 ],
-                '/Expected: maximum length of 100\.$/',
+                '/Expected: maximum length of 100\\.$/',
                 'name',
             ],
 

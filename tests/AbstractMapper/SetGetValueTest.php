@@ -6,14 +6,14 @@ use \DealNews\DataMapper\AbstractMapper;
 
 class SetGetValueTest extends \PHPUnit\Framework\TestCase {
     public function testSetInvalidEncoding() {
-        $this->expectException("\LogicException");
+        $this->expectException('\\LogicException');
         $obj    = new SetGetValueMock();
         $mapper = new SetGetValueMapperMock();
         $mapper->setValue($obj, 'foo', ['foo' => true], ['encoding' => 'bad']);
     }
 
     public function testGetInvalidEncoding() {
-        $this->expectException("\LogicException");
+        $this->expectException('\\LogicException');
         $obj      = new SetGetValueMock();
         $obj->foo = 1;
         $mapper   = new SetGetValueMapperMock();
@@ -119,7 +119,7 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
             'YAML' => [
                 'yaml',
                 [
-                    'yaml' => yaml_emit(['foo'=>'bar']),
+                    'yaml' => yaml_emit(['foo' => 'bar']),
                 ],
                 [
                     'encoding' => 'yaml',
@@ -144,7 +144,7 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
                     'dt' => '2020-01-01 12:00:00',
                 ],
                 [
-                    'class' => "\DateTime",
+                    'class' => '\\DateTime',
                 ],
                 new \DateTime('2020-01-01 12:00:00'),
             ],
@@ -154,7 +154,7 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
                     'dti' => '2020-01-01 12:00:00',
                 ],
                 [
-                    'class' => "\DateTimeImmutable",
+                    'class' => '\\DateTimeImmutable',
                 ],
                 new \DateTimeImmutable('2020-01-01 12:00:00'),
             ],
@@ -164,9 +164,17 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
                     'dt' => strtotime('2020-01-01 12:00:00'),
                 ],
                 [
-                    'class' => "\DateTime",
+                    'class' => '\\DateTime',
                 ],
                 new \DateTime('2020-01-01 12:00:00'),
+            ],
+            'ArrayObject' => [
+                'arr',
+                [
+                    'arr' => [1, 2, 3],
+                ],
+                [],
+                new \ArrayObject([1, 2, 3]),
             ],
         ];
     }
@@ -241,7 +249,7 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
                 [
                     'encoding' => 'yaml',
                 ],
-                yaml_emit(['foo'=>'bar']),
+                yaml_emit(['foo' => 'bar']),
             ],
             'Serialize' => [
                 'class',
@@ -255,7 +263,7 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
                 'dt',
                 new \DateTime('2020-01-01 12:00:00'),
                 [
-                    'class' => "\DateTime",
+                    'class' => '\\DateTime',
                 ],
                 '2020-01-01 12:00:00',
             ],
@@ -263,9 +271,24 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
                 'dti',
                 new \DateTimeImmutable('2020-01-01 12:00:00'),
                 [
-                    'class' => "\DateTimeImmutable",
+                    'class' => '\\DateTimeImmutable',
                 ],
                 '2020-01-01 12:00:00',
+            ],
+            'DateTime as Int' => [
+                'dt',
+                new \DateTime('2020-01-01 12:00:00'),
+                [
+                    'class' => '\\DateTime',
+                    'type'  => 'int',
+                ],
+                strtotime('2020-01-01 12:00:00'),
+            ],
+            'ArrayObject' => [
+                'arr',
+                new \ArrayObject([1, 2, 3]),
+                [],
+                [1, 2, 3],
             ],
         ];
     }
@@ -282,12 +305,14 @@ class SetGetValueMock {
     public \stdClass $class;
     public \DateTime $dt;
     public \DateTimeImmutable $dti;
+    public \ArrayObject $arr;
 
     public function __construct() {
         $this->json_object = new \stdClass();
         $this->class       = new \stdClass();
         $this->dt          = new \DateTime();
         $this->dti         = new \DateTimeImmutable();
+        $this->arr         = new \ArrayObject();
     }
 }
 
