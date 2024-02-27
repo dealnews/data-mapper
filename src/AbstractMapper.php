@@ -237,7 +237,7 @@ abstract class AbstractMapper implements Mapper {
                 $value  = $object->$property->format($format);
             } else {
 
-                if (!empty($mapping['one_to_many'])) {
+                if (!empty($mapping['one_to_many']) && is_iterable($value)) {
                     $new_value = [];
                     foreach ($value as $v) {
                         $new_value[] = (array)$v;
