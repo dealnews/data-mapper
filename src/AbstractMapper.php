@@ -147,6 +147,14 @@ abstract class AbstractMapper implements Mapper {
                     is_subclass_of($mapping['class'], "\DateTime", true) ||
                     is_subclass_of($mapping['class'], "\DateTimeImmutable", true)
                 ) {
+
+                    // Date values that are integers or floats in the database
+                    // need to be converted to strings for the parent mapper
+                    // base class
+                    if ($value !== null && is_numeric($value)) {
+                        $value = date($mapping['format'] ?? 'Y-m-d H:i:s', $value);
+                    }
+
                     $timezone = $mapping['timezone'] ?? null;
                     $format   = $mapping['format'] ?? 'Y-m-d H:i:s';
                     $value    = $mapping['class']::createFromFormat($format, $value, $timezone);
@@ -229,7 +237,7 @@ abstract class AbstractMapper implements Mapper {
                 $value  = $object->$property->format($format);
             } else {
 
-                if (!empty($mapping['one_to_many'])) {
+                if (!empty($mapping['one_to_many']) && is_iterable($value)) {
                     $new_value = [];
                     foreach ($value as $v) {
                         $new_value[] = (array)$v;

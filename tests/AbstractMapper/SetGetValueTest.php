@@ -158,6 +158,16 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
                 ],
                 new \DateTimeImmutable('2020-01-01 12:00:00'),
             ],
+            'DateTime as Int' => [
+                'dt',
+                [
+                    'dt' => strtotime('2020-01-01 12:00:00'),
+                ],
+                [
+                    'class' => "\DateTime",
+                ],
+                new \DateTime('2020-01-01 12:00:00'),
+            ],
         ];
     }
 
