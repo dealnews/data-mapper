@@ -151,13 +151,15 @@ abstract class AbstractMapper implements Mapper {
                     // Date values that are integers or floats in the database
                     // need to be converted to strings for the parent mapper
                     // base class
-                    if ($value !== null && is_numeric($value)) {
-                        $value = date($mapping['format'] ?? 'Y-m-d H:i:s', $value);
-                    }
+                    if ($value !== null) {
+                        if (is_numeric($value)) {
+                            $value = date($mapping['format'] ?? 'Y-m-d H:i:s', $value);
+                        }
 
-                    $timezone = $mapping['timezone'] ?? null;
-                    $format   = $mapping['format']   ?? 'Y-m-d H:i:s';
-                    $value    = $mapping['class']::createFromFormat($format, $value, $timezone);
+                        $timezone = $mapping['timezone'] ?? null;
+                        $format   = $mapping['format']   ?? 'Y-m-d H:i:s';
+                        $value    = $mapping['class']::createFromFormat($format, $value, $timezone);
+                    }
                 } else {
 
                     if (!empty($mapping['one_to_many'])) {
