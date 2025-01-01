@@ -52,7 +52,7 @@ return [
 
     // Run a quick version of checks that takes less
     // time
-    "quick_mode" => true,
+    "quick_mode" => false,
 
     // Only emit critical issues
     "minimum_severity" => 0,

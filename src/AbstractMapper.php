@@ -37,7 +37,7 @@ abstract class AbstractMapper implements Mapper {
      */
     protected ?Constraint $constraint;
 
-    public function __construct(Constraint $constraint = null) {
+    public function __construct(?Constraint $constraint = null) {
         $this->constraint = $constraint;
     }
 
