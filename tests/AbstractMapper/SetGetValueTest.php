@@ -333,7 +333,7 @@ class SetGetValueMapperMock extends AbstractMapper {
         return true;
     }
 
-    public function find(array $filter): ?array {
+    public function find(array $filter, ?int $limit = null, ?int $start = null, string $order = ''): ?array {
         return null;
     }
 

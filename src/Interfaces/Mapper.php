@@ -31,13 +31,17 @@ interface Mapper {
     /**
      * Finds multiple objects in the storage system
      *
-     * @param  array    $filter Array of filters where the keys are column
-     *                          names and the values are column values to
-     *                          filter upon.
+     * @param  array    $filter  Array of filters where the keys are column
+     *                           names and the values are column values to
+     *                           filter upon.
+     * @param int|null  $limit   Number of matches to return
+     * @param int|null  $start   Start position
+     * @param string    $order   The order of returned matches
+     *
      * @return null|array
      * @throws \Error
      */
-    public function find(array $filter): ?array;
+    public function find(array $filter, ?int $limit = null, ?int $start = null, string $order = ''): ?array;
 
     /**
      * Saves the object to the storage system

@@ -90,6 +90,27 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
+    public function testFind() {
+        $id = $this->save('TestFind');
+
+        $repo = new Repository(
+            [
+                'Course' => new CourseMapper,
+            ]
+        );
+
+        $courses = $repo->find('Course', ['name' => 'TestFind']);
+
+        $this->assertNotEmpty(
+            $courses
+        );
+
+        $this->assertEquals(
+            $id,
+            current($courses)->course_id
+        );
+    }
+
     public function testGetMapper() {
         $repo = new Repository(
             [
@@ -100,6 +121,13 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase {
         $mapper = $repo->getMapper('Course');
 
         $this->assertTrue($mapper instanceof CourseMapper);
+    }
+
+    public function testBadFind() {
+        $this->expectException('\\LogicException');
+        $this->expectExceptionCode('1');
+        $repo = $this->getRepo();
+        $obj  = $repo->find('Foo', []);
     }
 
     public function testBadNew() {
@@ -156,7 +184,7 @@ class BadMapper extends \DealNews\DataMapper\AbstractMapper {
     public function loadMulti(array $ids): ?array {
     }
 
-    public function find(array $filter): ?array {
+    public function find(array $filter, ?int $limit = null, ?int $start = null, string $order = ''): ?array{
     }
 
     public function save(object $object): object {
