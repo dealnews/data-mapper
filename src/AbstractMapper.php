@@ -61,6 +61,15 @@ abstract class AbstractMapper implements Mapper {
     }
 
     /**
+     * Deletes the given identifier.
+     *
+     * @param  mixed $id The identifier
+     *
+     * @return bool
+     */
+    abstract public function delete($id): bool;
+
+    /**
      * Applies the loaded data to the object. This can be overridden by a
      * child class when more complex work needs to be done.
      *

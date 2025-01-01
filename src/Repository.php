@@ -74,27 +74,6 @@ class Repository extends \DealNews\Repository\Repository {
     }
 
     /**
-     * Returns objects matching the filters. This method does not check
-     * the Repository storage for data. The data is returned from the Mapper.
-     * The data is stored in the Repository storage however after it is
-     * retrieved.
-     *
-     * @param  string $name    Mapped Object name
-     * @param  array  $filters Array of filters. See \DealNews\DataMapper\AbstractMapper::find()
-     *
-     * @return boolean|array
-     */
-    public function find(string $name, array $filters): bool|array {
-        $mapper = $this->getMapper($name);
-        $data   = $mapper->find($filters);
-        if (!empty($data)) {
-            $this->setMulti($name, $data);
-        }
-
-        return $data;
-    }
-
-    /**
      * Adds a mapper to the Repository
      *
      * @param string         $name   Mapped Object name
