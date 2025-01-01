@@ -30,7 +30,7 @@ class ConstraintException extends \DealNews\Constraints\ConstraintException {
      * @param integer         $code     A unique code for this thrown exception
      * @param \Throwable|null $previous A previously thrown exception which was caught
      */
-    public function __construct(string $property, $value, string $expected, string $example, int $code = 0, \Throwable $previous = null) {
+    public function __construct(string $property, $value, string $expected, string $example, int $code = 0, ?\Throwable $previous = null) {
         parent::__construct($value, $expected, $example, $code, $previous);
         $this->property = $property;
     }

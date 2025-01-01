@@ -37,7 +37,7 @@ abstract class AbstractMapper implements Mapper {
      */
     protected ?Constraint $constraint;
 
-    public function __construct(Constraint $constraint = null) {
+    public function __construct(?Constraint $constraint = null) {
         $this->constraint = $constraint;
     }
 
@@ -59,6 +59,15 @@ abstract class AbstractMapper implements Mapper {
     public static function getMappedClass(): string {
         return static::MAPPED_CLASS;
     }
+
+    /**
+     * Deletes the given identifier.
+     *
+     * @param  mixed $id The identifier
+     *
+     * @return bool
+     */
+    abstract public function delete($id): bool;
 
     /**
      * Applies the loaded data to the object. This can be overridden by a
