@@ -70,7 +70,7 @@ class CourseMapper extends \DealNews\DataMapper\AbstractMapper {
         return $ret;
     }
 
-    public function find(array $filter): ?array {
+        public function find(array $filter, ?int $limit = null, ?int $start = null, string $order = ''): ?array {
         $ret = [];
         foreach (self::$data as $id => $obj) {
             $match = true;
