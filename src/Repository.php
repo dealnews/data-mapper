@@ -85,13 +85,17 @@ class Repository extends \DealNews\Repository\Repository {
      * @param  int|null  $start   Start position
      * @param  string    $order   The order of returned matches
      *
-     * @return boolean|array
+     * @return array
      */
-    public function find(string $name, array $filters, ?int $limit = null, ?int $start = null, string $order = ''): bool|array {
+    public function find(string $name, array $filters, ?int $limit = null, ?int $start = null, string $order = ''): array {
         $mapper = $this->getMapper($name);
         $data   = $mapper->find($filters, $limit, $start, $order);
         if (!empty($data)) {
             $this->setMulti($name, $data);
+        }
+
+        if (empty($data)) {
+            $data = [];
         }
 
         return $data;
