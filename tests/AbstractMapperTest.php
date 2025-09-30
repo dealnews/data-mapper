@@ -2,10 +2,11 @@
 
 namespace DealNews\DataMapper\Tests;
 
-use \DealNews\DataMapper\Tests\TestClasses\Course;
-use \DealNews\DataMapper\Tests\TestClasses\Mapper\CourseMapper;
-use \DealNews\DataMapper\Tests\TestClasses\Student;
-use \DealNews\DataMapper\Tests\TestClasses\Teacher;
+use DealNews\DataMapper\Tests\TestClasses\Course;
+use DealNews\DataMapper\Tests\TestClasses\Mapper\CourseMapper;
+use DealNews\DataMapper\Tests\TestClasses\Student;
+use DealNews\DataMapper\Tests\TestClasses\Teacher;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AbstractMapperTest extends \PHPUnit\Framework\TestCase {
 
@@ -85,9 +86,7 @@ class AbstractMapperTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    /**
-     * @dataProvider constraintData
-     */
+    #[DataProvider("constraintData")]
     public function testConstraints($input, $expected_message, $property) {
         $mapper = new CourseMapper();
         $course = $mapper->testSetData($input);
@@ -99,7 +98,7 @@ class AbstractMapperTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function constraintData() {
+    public static function constraintData() {
         return [
 
             'Empty Name' => [

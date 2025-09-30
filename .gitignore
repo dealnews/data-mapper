@@ -19,3 +19,4 @@ phpunit.xml
 # test artifacts
 tests/fixtures/test_copy.db
 .phpunit.result.cache
+.phpunit.cache
