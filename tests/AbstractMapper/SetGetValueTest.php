@@ -2,7 +2,8 @@
 
 namespace DealNews\DataMapper\Tests\AbstractMapper;
 
-use \DealNews\DataMapper\AbstractMapper;
+use DealNews\DataMapper\AbstractMapper;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SetGetValueTest extends \PHPUnit\Framework\TestCase {
     public function testSetInvalidEncoding() {
@@ -20,9 +21,7 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
         $mapper->getValue($obj, 'foo', ['encoding' => 'bad']);
     }
 
-    /**
-     * @dataProvider encodingSetData
-     */
+    #[DataProvider('encodingSetData')]
     public function testSetValue($property, $data, $mapping, $expect) {
         $obj    = new SetGetValueMock();
         $mapper = new SetGetValueMapperMock();
@@ -40,7 +39,7 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function encodingSetData() {
+    public static function encodingSetData() {
         return [
 
             'Bool True String Yes uses Filter' => [
@@ -179,9 +178,7 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
         ];
     }
 
-    /**
-     * @dataProvider encodingGetData
-     */
+    #[DataProvider('encodingGetData')]
     public function testGetValue($property, $input, $mapping, $expect) {
         $obj            = new SetGetValueMock();
         $mapper         = new SetGetValueMapperMock();
@@ -193,7 +190,7 @@ class SetGetValueTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    public function encodingGetData() {
+    public static function encodingGetData() {
         return [
 
             'Bool True String Yes' => [
@@ -306,6 +303,7 @@ class SetGetValueMock {
     public \DateTime $dt;
     public \DateTimeImmutable $dti;
     public \ArrayObject $arr;
+    public bool $foo = false;
 
     public function __construct() {
         $this->json_object = new \stdClass();
