@@ -86,7 +86,7 @@ class AbstractMapperTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    #[DataProvider("constraintData")]
+    #[DataProvider('constraintData')]
     public function testConstraints($input, $expected_message, $property) {
         $mapper = new CourseMapper();
         $course = $mapper->testSetData($input);

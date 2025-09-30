@@ -184,7 +184,7 @@ class BadMapper extends \DealNews\DataMapper\AbstractMapper {
     public function loadMulti(array $ids): ?array {
     }
 
-    public function find(array $filter, ?int $limit = null, ?int $start = null, string $order = ''): ?array{
+    public function find(array $filter, ?int $limit = null, ?int $start = null, string $order = ''): ?array {
     }
 
     public function save(object $object): object {

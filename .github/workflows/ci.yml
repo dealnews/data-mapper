@@ -9,11 +9,11 @@ jobs:
 
     strategy:
       matrix:
-        php-versions: ['8.0', '8.1', '8.2']
+        php-versions: ['8.2', '8.3', '8.4']
         include:
           - operating-system: 'ubuntu-latest'
-            php-versions: '8.0'
-            phpunit-versions: 9
+            php-versions: '8.2'
+            phpunit-versions: 11
     steps:
 
     - name: Checkout
@@ -25,10 +25,10 @@ jobs:
         php_version: ${{ matrix.php-versions }}
 
     - name: PHPUnit tests
-      uses: php-actions/phpunit@v3
+      uses: php-actions/phpunit@v4
       with:
         php_extensions: "pcov yaml"
-        version: "9.6"
+        version: "11.5"
         php_version: ${{ matrix.php-versions }}
 
     - name: Run Phan

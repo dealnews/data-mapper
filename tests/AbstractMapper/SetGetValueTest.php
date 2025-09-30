@@ -304,7 +304,7 @@ class SetGetValueMock {
     public \DateTimeImmutable $dti;
     public \ArrayObject $arr;
     public bool $foo = false;
-    
+
     public function __construct() {
         $this->json_object = new \stdClass();
         $this->class       = new \stdClass();
